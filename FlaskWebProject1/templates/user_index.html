@@ -1,0 +1,97 @@
+<head>
+  Title
+</head>
+<script>
+var database = [];
+var CON = 0, PRAC = 1, TEACH = 2; //"Enum"s
+
+//Basic data structure for a profile
+var Profile = function() {
+  var p = {}
+  p.id = "";
+  p.password = "";
+  p.skills =
+    {
+      conversational: [],
+      practice: [],
+      teach: []
+    }
+  return p;
+}
+
+function subset_from_category(p, CAT)
+{
+    return CAT == CON ? p.skills.conversational: CAT == PRAC ? p.skills.practice: p.skills.teach;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                              Dummy database functions                    //
+//////////////////////////////////////////////////////////////////////////////
+function id_lookup (id)
+{
+  for(var i = 0; i < database.length; i ++)
+  {
+    if (database[i].id == id){ return database[i];}
+  }
+  return null;
+}
+function skill_lookup(skill, CAT)
+{
+  var res = [];
+  for (var i = 0; i < database.length; i ++)
+  {
+    var p = database[i];
+    var search = subset_from_category(p,CAT);
+    for (var i = 0; i < search.length; i ++)
+    {
+      if (search[i] == skill) res.push(p);
+    }
+  }
+  return res;
+}
+//////////////////////////////////////////////////////////////////////////////
+//                              Object function                             //
+//              Requires that the argument p is of type Profile             //
+//////////////////////////////////////////////////////////////////////////////
+
+function set_login(id, pass)
+{
+  var p = Profile();
+  p.id = id;
+  p.password = pass;
+  database.push(p);
+}
+
+function authenticate(id, pass)
+{
+  var p = id_lookup(id);
+  if (p == null) return false;
+  return p.password == password;
+}
+
+function add_skill(id, skill, CAT)
+{
+  var p = id_lookup(id);
+  var assign = subset_from_category(p, CAT);
+  assign.push(skill);
+}
+//////////////////////////////////////////////////////////////////////////////
+//                                Test Functions                            //
+//////////////////////////////////////////////////////////////////////////////
+function test_all()
+{
+  set_login("alice", "b");
+  set_login("bob", "a");
+  add_skill("bob", "art", CON);
+  add_skill("bob", "english", PRAC);
+  add_skill("bob", "chinese", PRAC);
+  add_skill("bob", "fencing", TEACH);
+  console.log(database);
+  console.log(skill_lookup("fencing", TEACH));
+}
+test_all();
+</script>
+<body>
+  Hello World
+</body>
+
