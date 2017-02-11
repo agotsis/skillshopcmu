@@ -33,14 +33,21 @@
                 <div class="col-lg-12  text-center">
                     <h2 class="section-heading">Results</h2>
                     <hr class="primary">
-                      {{results}}
                     <ul class="list-group">
+					{% for user in results %}
 					  <li class="list-group-item">
 						<div>
+							{{ user.names[0] }} <br>
+							<span style="font-weight:bold;">
+							{{ user.department }}</span>, 
+							<span style="text-decoration:underline;">
+							{{ user.student_level }}
+							</span>
 						</div>
 					  </li>
-        </ul>
-        </div>
+					{% endfor %}
+					</ul>
+				</div>
 			</div>
 		</div>
 	</section>

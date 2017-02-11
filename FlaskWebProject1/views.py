@@ -3,6 +3,7 @@ Routes and views for the flask application.
 """
 
 from datetime import datetime
+from directory import Directory
 from flask import render_template, g, Flask, request
 from FlaskWebProject1 import app
 import json
@@ -62,11 +63,13 @@ def db_lookup():
         'return_results.html'
         )
 
-    jsoned  = json.dumps (list(database[cat].get(skill)))
-    print(jsoned)
+    results = list(database[cat].get(skill))
+    results = [Directory(i).getInfo(["names",
+		"department", "student_level"]) for i in results]
+    print(results)
     return render_template(
       'return_results.html',
-      results = jsoned    )
+      results = results    )
   else:
     return render_template(
       'return_results.html',
