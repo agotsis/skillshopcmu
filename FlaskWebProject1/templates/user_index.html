@@ -1,0 +1,76 @@
+<head>
+  Title
+</head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>window.jQuery || document.write('<script src="{{
+    url_for('static', filename='jquery.js') }}">\x3C/script>')
+</script>
+
+<script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+<script>
+var CON = 0, PRAC = 1, TEACH = 2; //"Enum"s
+
+//////////////////////////////////////////////////////////////////////////////
+//                              Dummy database functions                    //
+//////////////////////////////////////////////////////////////////////////////
+
+function lookup_field(id)
+{
+
+  var response;
+  $.post('/field_lookup', {'id':id}, function(data)
+  {
+    console.log(data);
+    return data;
+  });
+  return response;
+}
+/*
+function skill_lookup(skill, CAT)
+{
+  var res = [];
+  for (var i = 0; i < database.length; i ++)
+  {
+    var p = database[i];
+    var search = subset_from_category(p,CAT);
+    for (var i = 0; i < search.length; i ++)
+    {
+      if (search[i] == skill) res.push(p);
+    }
+  }
+  return res;
+}
+*/
+
+//////////////////////////////////////////////////////////////////////////////
+//                              Object function                             //
+//              Requires that the argument p is of type Profile             //
+//////////////////////////////////////////////////////////////////////////////
+
+function add_field(id, pass)
+{
+  $.post('/field_set',{'id':id, 'password':pass}, function(data){
+    console.log(data);
+    return true;
+  });
+  return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//                                Test Functions                            //
+//////////////////////////////////////////////////////////////////////////////
+function test_all() {
+  add_field("bob", 'a');
+  console.log(lookup_field("alice"));
+};
+
+test_all()
+</script>
+<body>
+  Hello World
+</body>
+
