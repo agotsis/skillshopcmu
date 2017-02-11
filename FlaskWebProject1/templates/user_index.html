@@ -1,40 +1,35 @@
 <head>
   Title
 </head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>window.jQuery || document.write('<script src="{{
+    url_for('static', filename='jquery.js') }}">\x3C/script>')
+</script>
+
+<script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
 <script>
-var database = [];
 var CON = 0, PRAC = 1, TEACH = 2; //"Enum"s
-
-//Basic data structure for a profile
-var Profile = function() {
-  var p = {}
-  p.id = "";
-  p.password = "";
-  p.skills =
-    {
-      conversational: [],
-      practice: [],
-      teach: []
-    }
-  return p;
-}
-
-function subset_from_category(p, CAT)
-{
-    return CAT == CON ? p.skills.conversational: CAT == PRAC ? p.skills.practice: p.skills.teach;
-}
 
 //////////////////////////////////////////////////////////////////////////////
 //                              Dummy database functions                    //
 //////////////////////////////////////////////////////////////////////////////
-function id_lookup (id)
+
+function lookup_field(id)
 {
-  for(var i = 0; i < database.length; i ++)
+
+  var response;
+  $.post('/field_lookup', {'id':id}, function(data)
   {
-    if (database[i].id == id){ return database[i];}
-  }
-  return null;
+    console.log(data);
+    return data;
+  });
+  return response;
 }
+/*
 function skill_lookup(skill, CAT)
 {
   var res = [];
@@ -49,47 +44,31 @@ function skill_lookup(skill, CAT)
   }
   return res;
 }
+*/
+
 //////////////////////////////////////////////////////////////////////////////
 //                              Object function                             //
 //              Requires that the argument p is of type Profile             //
 //////////////////////////////////////////////////////////////////////////////
 
-function set_login(id, pass)
+function add_field(id, pass)
 {
-  var p = Profile();
-  p.id = id;
-  p.password = pass;
-  database.push(p);
+  $.post('/field_set',{'id':id, 'password':pass}, function(data){
+    console.log(data);
+    return true;
+  });
+  return false;
 }
 
-function authenticate(id, pass)
-{
-  var p = id_lookup(id);
-  if (p == null) return false;
-  return p.password == password;
-}
-
-function add_skill(id, skill, CAT)
-{
-  var p = id_lookup(id);
-  var assign = subset_from_category(p, CAT);
-  assign.push(skill);
-}
 //////////////////////////////////////////////////////////////////////////////
 //                                Test Functions                            //
 //////////////////////////////////////////////////////////////////////////////
-function test_all()
-{
-  set_login("alice", "b");
-  set_login("bob", "a");
-  add_skill("bob", "art", CON);
-  add_skill("bob", "english", PRAC);
-  add_skill("bob", "chinese", PRAC);
-  add_skill("bob", "fencing", TEACH);
-  console.log(database);
-  console.log(skill_lookup("fencing", TEACH));
-}
-test_all();
+function test_all() {
+  add_field("bob", 'a');
+  console.log(lookup_field("alice"));
+};
+
+test_all()
 </script>
 <body>
   Hello World
