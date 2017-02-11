@@ -36,7 +36,6 @@ def db_add():
       else:
         database[cat][skill] = set()
         database[cat][skill].add(name)
-    print(database)
     return redirect()
   else:
     return render_template(
@@ -66,7 +65,6 @@ def db_lookup():
     results = list(database[cat].get(skill))
     results = [Directory(i).getInfo(["names",
 		"department", "student_level"]) for i in results]
-    print(results)
     return render_template(
       'return_results.html',
       results = results    )
